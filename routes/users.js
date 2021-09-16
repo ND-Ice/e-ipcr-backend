@@ -39,6 +39,11 @@ router.post("/add", async (req, res) => {
   res.send(user);
 });
 
+// update user
+router.put("/:id", async (req, res) => {
+  return res.send("working");
+});
+
 // verify account
 router.get("/verify/:id", async (req, res) => {
   const user = await Users.findOne({ id: req.params.id });
