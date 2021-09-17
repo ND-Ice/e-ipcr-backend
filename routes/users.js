@@ -41,7 +41,32 @@ router.post("/add", async (req, res) => {
 
 // update user
 router.put("/:id", async (req, res) => {
-  return res.send("working");
+  const user = await Users.findByIdAndUpdate(req.params.id, req.body);
+  if (!user) return res.status(404).send("this user does not exist");
+  res.send(user);
+});
+
+// get current user
+router.get("/:id", async (req, res) => {
+  const currentUser = await Users.findById(req.params.id);
+  if (!currentUser) return res.status(404).send("User not found");
+  res.send(currentUser);
+});
+
+// get all users
+router.get("/", async (req, res) => {
+  const user = await Users.find({});
+  if (!user) return res.status(404).send("no users yet");
+  res.send(user);
+});
+
+// delete users
+router.delete("/:id", async (req, res) => {
+  const deletedUser = await Users.findByIdAndDelete(req.params.id);
+  if (!deletedUser)
+    return res.status(404).send("User with the given id does not exist");
+
+  return res.send(deletedUser);
 });
 
 // verify account
