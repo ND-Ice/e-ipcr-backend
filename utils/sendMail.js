@@ -1,27 +1,27 @@
 const nodemailer = require("nodemailer");
+const getEmailStructured = require("./getEmailStructured");
 
-function sendMail(sendTo, id, link, subject, button) {
-  let transporter = nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      user: process.env.EMAIL, // generated ethereal user
-      pass: process.env.PASSWORD, // generated ethereal password
-    },
-  });
+let transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.USER_EMAIL,
+    pass: process.env.USER_PASSWORD,
+  },
+});
 
-  transporter
-    .sendMail({
-      from: "delacruzjoshua691@gmail.com",
-      to: sendTo,
-      subject: subject,
-      html: `
-      <div>
-      <h1>Activate you Account</h1>
-      <a target="_blank" href="${link}/${id}">${button}</a>
-      </div>`,
-    })
-    .then(() => console.log("email sent"))
-    .catch((err) => console.log(err));
+async function sendMail(recipient, link, heading, title, id) {
+  try {
+    let info = await transporter.sendMail({
+      from: `"E-IPCR 👻" <${process.env.USER_EMAIL}>`,
+      to: recipient,
+      subject: "A message from EARIST IPCR",
+      html: getEmailStructured(link, heading, title, id),
+    });
+    console.log("message sent ", info.messageId);
+    return info.messageId;
+  } catch (error) {
+    console.log(error.message);
+  }
 }
 
 module.exports = sendMail;

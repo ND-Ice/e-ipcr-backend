@@ -1,9 +1,9 @@
 const express = require("express");
 const _ = require("lodash");
-const moment = require("moment");
 const router = express.Router();
 
 const { Evaluations, validateEvaluation } = require("../models/Evaluations");
+const checkDue = require("../utils/checkDue");
 
 // create evaluation
 router.post("/", async (req, res) => {
@@ -45,6 +45,43 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   const evaluation = await Evaluations.findById(req.params.id);
   if (!evaluation) return res.status(404).send("Evaluation not found");
+  return res.send(evaluation);
+});
+
+// get ongoing evaluations
+router.get("/filter/ongoing", async (req, res) => {
+  const ongoing = await Evaluations.find({ isFinished: false });
+  return res.send(ongoing);
+});
+
+// get past evaluations
+router.get("/filter/past", async (req, res) => {
+  const past = await Evaluations.find({ isFinished: true });
+  return res.send(past);
+});
+
+// get ongoing evaluations for specific department
+router.get("/filter/ongoing/:dept", async (req, res) => {
+  const ongoing = await Evaluations.find({
+    isFinished: false,
+    dept: req.params.dept,
+  });
+  return res.send(ongoing);
+});
+
+// get pas evaluations for specific department
+router.get("/filter/past/:dept", async (req, res) => {
+  const past = await Evaluations.find({
+    isFinished: true,
+    dept: req.params.dept,
+  });
+  return res.send(past);
+});
+
+// get evaluations by department
+router.get("/department/:deparmtment", async (req, res) => {
+  const evaluations = await Evaluations.find({ dept: req.params.deparmtment });
+  return res.send(evaluations);
 });
 
 // edit evaluations or extend
@@ -56,9 +93,9 @@ router.put("/:id", async (req, res) => {
   if (!evaluation)
     return res.status(400).send("This evaluation does not exist");
 
-  const notDue = moment("2021-09-17").isSameOrBefore("2021-09-20");
+  const isDue = checkDue("2021-09-17", "2021-09-20");
 
-  if (!notDue) return res.send(evaluation);
+  if (!isDue) return res.send(evaluation);
   evaluation.isFinished = false;
   await evaluation.save();
   res.send(evaluation);

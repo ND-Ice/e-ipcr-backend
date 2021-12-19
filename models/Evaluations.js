@@ -10,7 +10,7 @@ const Evaluations = mongoose.model(
     desc: { type: String },
     dept: { type: String },
     due: { type: String },
-    date: { type: String, default: currentDate },
+    timeStamp: { type: String, default: Date.now() },
     isFinished: { type: Boolean, default: false },
   })
 );
@@ -21,7 +21,7 @@ function validateEvaluation(evaluation) {
     due: Joi.date().required(),
     dept: Joi.string().required(),
     desc: Joi.string(),
-  });
+  }).unknown(true);
   return schema.validate(evaluation);
 }
 

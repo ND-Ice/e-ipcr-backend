@@ -1,21 +1,22 @@
 const express = require("express");
 const mongoose = require("mongoose");
-const dotenv = require("dotenv");
 const cors = require("cors");
 const app = express();
+require("dotenv").config();
 
 // routes
-const users = require("./routes/users");
 const auth = require("./routes/auth");
 const evaluations = require("./routes/evaluations");
+const deans = require("./routes/deans");
+const faculties = require("./routes/faculties");
 
-dotenv.config();
 const PORT = process.env.PORT || 5000;
 const DB_CONNECTION = process.env.DB_CONNECTION;
 
 app.use(express.json());
 app.use(cors());
-app.use("/api/users", users);
+app.use("/api/deans", deans);
+app.use("/api/faculties", faculties);
 app.use("/api/auth", auth);
 app.use("/api/evaluations", evaluations);
 
