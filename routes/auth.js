@@ -12,6 +12,12 @@ router.post("/dean", async (req, res) => {
 
   const dean = await Deans.findOne({ email });
   if (!dean) return res.status(400).send("Invalid Credentials.");
+
+  if (!dean.isActivated)
+    return res
+      .status(400)
+      .send("Please activate your account first before loggin in.");
+
   const validPassword = await brcypt.compare(password, dean.password);
 
   if (!validPassword)
@@ -27,6 +33,12 @@ router.post("/faculty", async (req, res) => {
 
   const faculty = await Faculties.findOne({ email });
   if (!faculty) return res.status(400).send("Invalid Credentials.");
+
+  if (!faculty.isActivated)
+    return res
+      .status(400)
+      .send("Please activate your account first before loggin in.");
+
   const validPassword = await brcypt.compare(password, faculty.password);
 
   if (!validPassword)

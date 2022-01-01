@@ -1,0 +1,27 @@
+const mongoose = require("mongoose");
+
+const Response = mongoose.model(
+  "Response",
+  new mongoose.Schema({
+    evaluationId: String,
+    userId: String,
+    isApproved: {
+      approvedBy: {},
+      recommendation: String,
+    },
+    isRejected: {
+      rejectedBy: {},
+      reason: String,
+    },
+    dateSubmitted: { type: String, default: Date.now() },
+    coreFunctionsMeasure: String,
+    supportFunctionsMeasure: String,
+    coreFunctions: [],
+    supportFunctions: [],
+    ratings: {
+      average: { type: String, default: null },
+    },
+  })
+);
+
+module.exports = { Response };

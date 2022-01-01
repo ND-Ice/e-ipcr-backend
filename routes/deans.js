@@ -1,33 +1,93 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router();
+const multer = require("multer");
 
 const { Deans, validate } = require("../models/Deans");
-const generatePassword = require("../utils/generatePassword");
-const sendMail = require("../utils/sendMail");
+const sendMail = require("../sendMail");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
+
+// upload profile picture
+router.patch(
+  "/upload-profile/:id",
+  upload.single("image"),
+  async (req, res) => {
+    const dean = await Deans.findById(req.params.id);
+    if (!dean) return res.status(400).send("user does not exist");
+    dean.image.current = `http://localhost:5000/${req.file.path}`;
+    await dean.save();
+    return res.send(dean);
+  }
+);
 
 // create dean account
 router.post("/", async (req, res) => {
-  const { firstName, lastName, email, dept } = req.body;
+  const { firstName, lastName, middleName, email, dept, password, birthDate } =
+    req.body;
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
-  let dean = await Deans.findOne({ email, firstName, lastName, dept });
+  let dean = await Deans.findOne({
+    email,
+    firstName,
+    lastName,
+    middleName,
+  });
   if (dean) return res.status(400).send("This user already exist");
-
-  const password = generatePassword(10);
 
   dean = new Deans({
     email,
-    name: { firstName, lastName },
+    name: { firstName, lastName, middleName },
     dept,
     password,
+    birthDate,
   });
 
   const salt = await bcrypt.genSalt(10);
   dean.password = await bcrypt.hash(dean.password, salt);
-
   await dean.save();
+
+  sendMail(
+    dean.email,
+    process.env.DEAN_ACTIVATE,
+    "Activate Account",
+    "Activate Now",
+    dean._id
+  );
+  return res.send("Check your email to activate your account");
+});
+
+// update dean primary account account
+router.patch("/:id", async (req, res) => {
+  const { contact, houseNumber, street, barangay, city, province } = req.body;
+  const dean = await Deans.findById(req.params.id);
+  if (!dean) return res.status(404).send("user does not exist");
+
+  dean.contact = contact;
+  dean.address.houseNumber = houseNumber;
+  dean.address.street = street;
+  dean.address.barangay = barangay;
+  dean.address.city = city;
+  dean.address.province = province;
+  await dean.save();
+  return res.send(dean);
+});
+
+// update dean basic info
+router.put("/:id", async (req, res) => {
+  const dean = await Deans.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  if (!dean) return res.status(400).send("user does not exist");
   return res.send(dean);
 });
 
@@ -45,33 +105,14 @@ router.get("/", async (req, res) => {
   return res.send(deans);
 });
 
-// get deans by department
-router.get("/department/:department", async (req, res) => {
-  const deans = await Deans.find({ dept: req.params.department });
-  return res.send(deans);
-});
-
 // activate dean account
-router.get("/activate-account/:email", async (req, res) => {
-  const { email } = req.params;
+router.get("/activate-account/:id", async (req, res) => {
+  let dean = await Deans.findById(req.params.id);
+  if (!dean) return res.status(404).send("User does not exist");
 
-  const dean = await Deans.findOne({ email });
-  if (!dean) return res.status(400).send("This user does not exist.");
-
-  const mail = sendMail(
-    email,
-    process.env.DEAN_ACTIVATE,
-    "Activate your account.",
-    "Activate",
-    dean._id
-  );
-
-  if (!mail)
-    return res
-      .status(400)
-      .send("something went wrong. please try again later.");
-
-  return res.send("Check your email for further details.");
+  dean.isActivated = true;
+  await dean.save();
+  return res.send("Account activated");
 });
 
 // forgot password
