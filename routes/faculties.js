@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 const multer = require("multer");
+const path = require("path");
 
 const { Faculties, validate } = require("../models/Faculties");
 const sendMail = require("../sendMail");
@@ -133,7 +134,7 @@ router.get("/activate-account/:id", async (req, res) => {
 
   faculty.isActivated = true;
   await faculty.save();
-  return res.send("Account Activated");
+  return res.sendFile(path.join(__dirname, "/index.html"));
 });
 
 // forgot password
