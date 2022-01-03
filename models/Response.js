@@ -7,6 +7,7 @@ const Response = mongoose.model(
     userId: String,
     isApproved: {
       approvedBy: {},
+      approvedDate: String,
       recommendation: String,
     },
     isRejected: {
