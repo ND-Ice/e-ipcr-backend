@@ -19,6 +19,7 @@ const Response = mongoose.model(
     supportFunctionsMeasure: String,
     coreFunctions: [],
     supportFunctions: [],
+    attachments: [],
     ratings: {
       average: { type: String, default: null },
     },

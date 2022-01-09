@@ -1,11 +1,23 @@
 const express = require("express");
 const _ = require("lodash");
 const router = express.Router();
+const multer = require("multer");
 
 const { Response } = require("../models/Response");
 
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "uploads/");
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.originalname);
+  },
+});
+const upload = multer({ storage: storage });
+
 // submit reponse
-router.post("/:id", async (req, res) => {
+router.post("/", upload.array("files"), async (req, res) => {
+  const attachments = [];
   const {
     evaluationId,
     userId,
@@ -23,11 +35,14 @@ router.post("/:id", async (req, res) => {
   response = new Response({
     evaluationId,
     userId,
-    coreFunctions,
-    supportFunctions,
+    coreFunctions: JSON.parse(coreFunctions),
+    supportFunctions: JSON.parse(supportFunctions),
     coreFunctionsMeasure,
     supportFunctionsMeasure,
   });
+
+  req.files.forEach((file) => attachments.push(file));
+  response.attachments = attachments;
 
   await response.save();
   res.send(response);
