@@ -21,10 +21,16 @@ router.post("/", upload.array("files"), async (req, res) => {
   const {
     evaluationId,
     userId,
+    user,
+    templateId,
     coreFunctions,
     supportFunctions,
     coreFunctionsMeasure,
     supportFunctionsMeasure,
+    average,
+    userSignature,
+    createdBy,
+    hrSignature,
   } = req.body;
   let response = await Response.findOne({
     userId: req.body.userId,
@@ -35,10 +41,18 @@ router.post("/", upload.array("files"), async (req, res) => {
   response = new Response({
     evaluationId,
     userId,
+    user: JSON.parse(user),
+    templateId,
     coreFunctions: JSON.parse(coreFunctions),
     supportFunctions: JSON.parse(supportFunctions),
     coreFunctionsMeasure,
     supportFunctionsMeasure,
+    signatures: {
+      userSignature,
+      hrSignature,
+    },
+    preparedBy: JSON.parse(createdBy),
+    ratings: { average: average },
   });
 
   req.files.forEach((file) => attachments.push(file));

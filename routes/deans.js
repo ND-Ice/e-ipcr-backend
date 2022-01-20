@@ -32,8 +32,16 @@ router.patch(
 
 // create dean account
 router.post("/", async (req, res) => {
-  const { firstName, lastName, middleName, email, dept, password, birthDate } =
-    req.body;
+  const {
+    firstName,
+    lastName,
+    middleName,
+    email,
+    dept,
+    password,
+    birthDate,
+    position,
+  } = req.body;
   const { error } = validate(req.body);
   if (error) return res.status(400).send(error.details[0].message);
 
@@ -51,6 +59,7 @@ router.post("/", async (req, res) => {
     dept,
     password,
     birthDate,
+    position,
   });
 
   const salt = await bcrypt.genSalt(10);

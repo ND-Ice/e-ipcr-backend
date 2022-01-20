@@ -24,7 +24,7 @@ const deansSchema = new mongoose.Schema({
   },
   contact: String,
   timeStamp: { type: String, default: Date.now() },
-  position: { String },
+  position: String,
   qualification: String,
 });
 
@@ -48,6 +48,7 @@ function validate(dean) {
     email: Joi.string().email().required(),
     dept: Joi.string().required(),
     password: Joi.string().min(8).required(),
+    position: Joi.string().required(),
   }).unknown(true);
   // validation
   return schema.validate(dean);

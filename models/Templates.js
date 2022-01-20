@@ -9,7 +9,12 @@ const Templates = mongoose.model(
     comments: { type: String, default: "" },
     coreFunctions: [],
     supportFunctions: [],
-    isUse: { type: Boolean, default: false },
+    target: String,
+    targetYear: String,
+    generatedBy: {
+      createdBy: {},
+      signature: String,
+    },
     ratings: {
       average: { type: String, default: null },
     },
