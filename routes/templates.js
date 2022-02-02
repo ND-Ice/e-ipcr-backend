@@ -1,6 +1,9 @@
 const express = require("express");
 const MonkeyLearn = require("monkeylearn");
+const Sentiment = require("sentiment");
 const router = express.Router();
+
+const sentiment = new Sentiment();
 
 const { Templates } = require("../models/Templates");
 
@@ -32,9 +35,19 @@ router.post("/", async (req, res) => {
   return res.send(template);
 });
 
+// get templates
 router.get("/", async (req, res) => {
   const templates = await Templates.find();
   return res.send(templates);
+});
+
+// delete templates
+router.delete("/:id", async (req, res) => {
+  const template = await Templates.findByIdAndDelete(req.params.id);
+  if (!template)
+    return res
+      .status(400)
+      .send("The template with the given id does not exist");
 });
 
 // classify sentiment
@@ -72,6 +85,12 @@ router.post("/upload-classifier", async (req, res) => {
   } catch (error) {
     return res.status(400).send(error);
   }
+});
+
+router.post("/analyze", async (req, res) => {
+  const { comment } = req.body;
+  const sentimentResult = sentiment.analyze(comment, { language: "en" });
+  return res.send(sentimentResult);
 });
 
 module.exports = router;
