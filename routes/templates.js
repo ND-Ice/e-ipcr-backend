@@ -48,6 +48,8 @@ router.delete("/:id", async (req, res) => {
     return res
       .status(400)
       .send("The template with the given id does not exist");
+
+  return res.send("Deleted Successfully.");
 });
 
 // classify sentiment
