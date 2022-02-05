@@ -66,14 +66,9 @@ router.post("/", async (req, res) => {
   dean.password = await bcrypt.hash(dean.password, salt);
   await dean.save();
 
-  sendMail(
-    dean.email,
-    process.env.DEAN_ACTIVATE,
-    "Activate Account",
-    "Activate Now",
-    dean._id
+  return res.send(
+    "The admin will verify the validity of your account. Please wait up to 1-2 working days for the admin decision."
   );
-  return res.send("Check your email to activate your account");
 });
 
 // update dean primary account account
