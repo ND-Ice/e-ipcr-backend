@@ -118,11 +118,33 @@ router.get("/", async (req, res) => {
 // activate dean account
 router.get("/activate-account/:id", async (req, res) => {
   let dean = await Deans.findById(req.params.id);
-  if (!dean) return res.status(404).send("User does not exist");
+  if (!dean) return res.status(404).send("User does not exist.");
 
   dean.isActivated = true;
   await dean.save();
-  return res.sendFile(path.join(__dirname, "/index.html"));
+  sendMail(
+    dean.email,
+    process.env.LOGIN_LINK_DEAN,
+    "Approved",
+    "Proceed to Login",
+    dean?._id
+  );
+  return res.send(dean);
+});
+
+// reject dean
+router.delete("/reject-dean/:id", async (req, res) => {
+  const dean = await Deans.findByIdAndDelete(req.params.id);
+  if (!dean) return res.status(400).send("This user does not exist.");
+
+  sendMail(
+    dean.email,
+    process.env.REGISTER_LINK_DEAN,
+    "Rejected",
+    "Try registering again",
+    dean?._id
+  );
+  return res.send(dean);
 });
 
 // forgot password

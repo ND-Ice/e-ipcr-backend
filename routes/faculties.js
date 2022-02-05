@@ -78,7 +78,9 @@ router.post("/", async (req, res) => {
     "Activate Now",
     faculty._id
   );
-  return res.send("Check your email to activate your account.");
+  return res.send(
+    "The admin will check the validity of your account. Please wait for 1-2 working days for the admin's decision through your email."
+  );
 });
 
 // update faculty primary account account
@@ -134,7 +136,29 @@ router.get("/activate-account/:id", async (req, res) => {
 
   faculty.isActivated = true;
   await faculty.save();
-  return res.sendFile(path.join(__dirname, "/index.html"));
+  sendMail(
+    faculty.email,
+    process.env.LOGIN_LINK,
+    "Approved",
+    "Proceed to Login",
+    faculty?._id
+  );
+  return res.send(faculty);
+});
+
+// reject faculty
+router.delete("/reject-faculty/:id", async (req, res) => {
+  const faculty = await Faculties.findByIdAndDelete(req.params.id);
+  if (!faculty) return res.status(400).send("This user does not exist.");
+
+  sendMail(
+    faculty.email,
+    process.env.REGISTER_LINK,
+    "Rejected",
+    "Try registering again",
+    faculty?._id
+  );
+  return res.send(faculty);
 });
 
 // forgot password

@@ -37,7 +37,9 @@ router.post("/faculty", async (req, res) => {
   if (!faculty.isActivated)
     return res
       .status(400)
-      .send("Please activate your account first before loggin in.");
+      .send(
+        "The admin will verify the validity of your account. Please wait up to 1-2 working days for the admin decision."
+      );
 
   const validPassword = await brcypt.compare(password, faculty.password);
 
