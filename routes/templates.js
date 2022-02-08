@@ -15,7 +15,6 @@ router.post("/", async (req, res) => {
     supportFunctions,
     target,
     targetYear,
-    generatedBy,
   } = req.body;
 
   let template = await Templates.findOne({ targetYear, target });
@@ -28,7 +27,6 @@ router.post("/", async (req, res) => {
     supportFunctions,
     target,
     targetYear,
-    generatedBy,
   });
 
   await template.save();

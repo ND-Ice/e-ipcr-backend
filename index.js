@@ -11,6 +11,7 @@ const deans = require("./routes/deans");
 const faculties = require("./routes/faculties");
 const response = require("./routes/response");
 const templates = require("./routes/templates");
+const logs = require("./routes/logs");
 
 const PORT = process.env.PORT || 5000;
 const DB_CONNECTION = process.env.DB_CONNECTION;
@@ -24,6 +25,7 @@ app.use("/api/auth", auth);
 app.use("/api/evaluations", evaluations);
 app.use("/api/response", response);
 app.use("/api/templates", templates);
+app.use("/api/logs", logs);
 
 mongoose
   .connect(DB_CONNECTION, {

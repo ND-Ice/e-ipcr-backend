@@ -5,23 +5,7 @@ const Response = mongoose.model(
   new mongoose.Schema({
     evaluationId: String,
     userId: String,
-    user: {},
     templateId: String,
-    feedback: {
-      comments: { title: { type: String, default: "" }, list: [] },
-      recommendations: { title: { type: String, default: "" }, list: [] },
-    },
-    isApproved: {
-      approvedBy: {},
-      approvedDate: String,
-    },
-    signatures: {
-      userSignature: String,
-      evaluatorSignature: String,
-      hrSignature: String,
-    },
-    preparedBy: {},
-    dateSubmitted: { type: String, default: Date.now() },
     coreFunctionsMeasure: String,
     supportFunctionsMeasure: String,
     coreFunctions: [],
@@ -29,6 +13,47 @@ const Response = mongoose.model(
     attachments: [],
     ratings: {
       average: { type: String, default: null },
+    },
+    feedback: {
+      comments: { title: { type: String, default: "" }, list: [] },
+      recommendations: { title: { type: String, default: "" }, list: [] },
+    },
+    dateSubmitted: { type: String, default: Date.now() },
+    status: {
+      faculty: {
+        signature: String,
+        user: {},
+      },
+      intermediateSupervisor: {
+        signature: String,
+        dateApproved: String,
+        user: {},
+        isApproved: { type: Boolean, default: false },
+      },
+      director: {
+        signature: String,
+        dateApproved: String,
+        user: {},
+        isApproved: { type: Boolean, default: false },
+      },
+      PMT: {
+        signature: String,
+        dateApproved: String,
+        user: {},
+        isApproved: { type: Boolean, default: false },
+      },
+      HEAD: {
+        signature: String,
+        dateApproved: String,
+        user: {},
+        isApproved: { type: Boolean, default: false },
+      },
+      HR: {
+        signature: String,
+        dateApproved: String,
+        user: {},
+        isApproved: { type: Boolean, default: false },
+      },
     },
   })
 );

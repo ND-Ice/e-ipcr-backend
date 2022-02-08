@@ -11,10 +11,6 @@ const Templates = mongoose.model(
     supportFunctions: [],
     target: String,
     targetYear: String,
-    generatedBy: {
-      createdBy: {},
-      signature: String,
-    },
     ratings: {
       average: { type: String, default: null },
     },

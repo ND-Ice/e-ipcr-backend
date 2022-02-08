@@ -8,16 +8,16 @@ const { Admins } = require("../models/Admins");
 
 // deans auth
 router.post("/dean", async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, dept, position } = req.body;
 
-  const dean = await Deans.findOne({ email });
+  const dean = await Deans.findOne({ email, dept, position });
   if (!dean) return res.status(400).send("Invalid Credentials.");
 
   if (!dean.isActivated)
     return res
       .status(400)
       .send(
-        "The admin will verify the validity of your account. Please wait up to 1-2 working days for the admin decision."
+        "The admin will verify the validity of your account. The admin will send you an e-mail about the decistion."
       );
 
   const validPassword = await brcypt.compare(password, dean.password);
@@ -40,7 +40,7 @@ router.post("/faculty", async (req, res) => {
     return res
       .status(400)
       .send(
-        "The admin will verify the validity of your account. Please wait up to 1-2 working days for the admin decision."
+        "The admin will verify the validity of your account. the admin will send you an e-mail about the decision."
       );
 
   const validPassword = await brcypt.compare(password, faculty.password);

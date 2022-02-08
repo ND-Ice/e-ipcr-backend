@@ -50,6 +50,8 @@ router.post("/", async (req, res) => {
     firstName,
     lastName,
     middleName,
+    dept,
+    position,
   });
   if (dean) return res.status(400).send("This user already exist");
 
