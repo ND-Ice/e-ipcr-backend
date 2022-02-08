@@ -8,9 +8,9 @@ const { Admins } = require("../models/Admins");
 
 // deans auth
 router.post("/dean", async (req, res) => {
-  const { email, password, dept, position } = req.body;
+  const { email, password, position } = req.body;
 
-  const dean = await Deans.findOne({ email, dept, position });
+  const dean = await Deans.findOne({ email, position });
   if (!dean) return res.status(400).send("Invalid Credentials.");
 
   if (!dean.isActivated)
