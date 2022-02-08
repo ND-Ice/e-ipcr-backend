@@ -7,6 +7,7 @@ const Logs = mongoose.model(
     actionCreator: {},
     actionMessage: String,
     actionTarget: {},
+    date: { type: String, default: Date.now() },
   })
 );
 
