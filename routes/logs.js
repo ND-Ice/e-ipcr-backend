@@ -23,7 +23,7 @@ router.post("/", async (req, res) => {
 
 router.get("/:evaluationId", async (req, res) => {
   const logs = await Logs.find({ evaluationId: req.params.evaluationId }).sort({
-    date: 1,
+    date: -1,
   });
   return res.send(logs);
 });
