@@ -71,13 +71,6 @@ router.post("/", async (req, res) => {
 
   await faculty.save();
 
-  sendMail(
-    faculty.email,
-    process.env.FACULTY_ACTIVATE,
-    "Activate Account",
-    "Activate Now",
-    faculty._id
-  );
   return res.send(
     "The admin will check the validity of your account. Please wait for 1-2 working days for the admin's decision through your email."
   );
