@@ -6,12 +6,8 @@ const facultySchema = new mongoose.Schema({
   email: String,
   name: { firstName: String, lastName: String, middleName: String },
   password: String,
-  dept: String,
+  college: String,
   isActivated: { type: Boolean, default: false },
-  college: {
-    acronym: { type: String, default: "CAS" },
-    full: { type: String, default: "College of Arts and Sciences" },
-  },
   gender: String,
   birthDate: Date,
   image: { current: String, all: [] },
@@ -46,7 +42,7 @@ function validate(faculty) {
   // validation schema
   const schema = Joi.object({
     email: Joi.string().email().required(),
-    dept: Joi.string().required(),
+    college: Joi.string().required(),
     position: Joi.string().required(),
     password: Joi.string().required(),
   }).unknown(true);

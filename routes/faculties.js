@@ -35,7 +35,7 @@ router.patch(
 router.post("/", async (req, res) => {
   const {
     email,
-    dept,
+    college,
     firstName,
     lastName,
     middleName,
@@ -51,6 +51,7 @@ router.post("/", async (req, res) => {
     firstName,
     lastName,
     middleName,
+    college,
   });
   if (faculty) return res.status(400).send("This user already exist.");
 
@@ -62,7 +63,7 @@ router.post("/", async (req, res) => {
       middleName,
     },
     birthDate,
-    dept,
+    college,
     password,
     position,
   });

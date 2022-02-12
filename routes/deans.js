@@ -2,7 +2,6 @@ const express = require("express");
 const bcrypt = require("bcrypt");
 const router = express.Router();
 const multer = require("multer");
-const path = require("path");
 
 const { Deans, validate } = require("../models/Deans");
 const sendMail = require("../sendMail");
@@ -37,7 +36,7 @@ router.post("/", async (req, res) => {
     lastName,
     middleName,
     email,
-    dept,
+    college,
     password,
     birthDate,
     position,
@@ -50,7 +49,7 @@ router.post("/", async (req, res) => {
     firstName,
     lastName,
     middleName,
-    dept,
+    college,
     position,
   });
   if (dean) return res.status(400).send("This user already exist");
@@ -58,7 +57,7 @@ router.post("/", async (req, res) => {
   dean = new Deans({
     email,
     name: { firstName, lastName, middleName },
-    dept,
+    college,
     password,
     birthDate,
     position,

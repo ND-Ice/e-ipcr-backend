@@ -6,11 +6,7 @@ const deansSchema = new mongoose.Schema({
   email: String,
   name: { firstName: String, lastName: String, middleName: String },
   password: String,
-  dept: String,
-  college: {
-    acronym: { type: String, default: "CAS" },
-    full: { type: String, default: "College of Arts and Sciences" },
-  },
+  college: String,
   isActivated: { type: Boolean, default: false },
   gender: String,
   birthDate: Date,
@@ -46,7 +42,7 @@ function validate(dean) {
   // validation schema
   const schema = Joi.object({
     email: Joi.string().email().required(),
-    dept: Joi.string().required(),
+    college: Joi.string().required(),
     password: Joi.string().min(8).required(),
     position: Joi.string().required(),
   }).unknown(true);
